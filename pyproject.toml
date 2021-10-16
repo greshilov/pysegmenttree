@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=40", "wheel"]
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = 'pysegmenttree/.*\.py|tests/.*\.py|setup.py'
