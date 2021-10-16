@@ -74,12 +74,16 @@ def test_update():
 def test_query_random():
     random.seed(42)
 
-    source = [random.randint(-100, 100) for _ in range(100)]
+    size = 100
+    rng = 100
+    queries = 100
+
+    source = [random.randint(-rng, rng) for _ in range(size)]
     s_tree = SegmentTree(source=source)
     verify_tree = VerifySegmentTree(source=source)
 
-    for _ in range(100):
-        left, right = sorted((random.randint(0, 100), random.randint(0, 100)))
+    for _ in range(queries):
+        left, right = sorted((random.randint(0, size - 1), random.randint(0, size - 1)))
         assert s_tree.query(left, right) == verify_tree.query(left, right)
 
 
@@ -88,14 +92,16 @@ def test_query_n_update_random():
 
     size = 100
     rng = 100
+    queries = 100
 
     source = [random.randint(-rng, rng) for _ in range(size)]
     s_tree = SegmentTree(source=source)
     verify_tree = VerifySegmentTree(source=source)
 
-    for _ in range(100):
+    for _ in range(queries):
         indx = random.randint(0, size - 1)
         value = random.randint(-rng, rng)
+
         s_tree.update(indx, value)
         verify_tree.update(indx, value)
 
