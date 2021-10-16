@@ -13,4 +13,4 @@ testpaths = [
 [tool.black]
 line-length = 88
 target-version = ['py39']
-include = 'pysegmenttree/.*\.py|tests/.*\.py|setup.py'
+include = 'pysegmenttree/.*\.py|tests/.*\.py|benchmarks/.*\.py|setup.py'

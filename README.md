@@ -16,3 +16,8 @@ pip-compile requirements.dev.in
 ```
 pytest
 ```
+
+## Benchmark
+```
+python benchmarks/benchmark.py
+```
