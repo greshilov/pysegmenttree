@@ -2,16 +2,11 @@ import operator
 
 
 class SegmentTree:
-    def __init__(self, source=None, func=operator.add):
-        self.func = func
-
-        if source is not None:
-            self.size = len(source)
-            self.tree = [*[None] * self.size, *source]
-            self._build()
-        else:
-            self.size = 0
-            self.tree = []
+    def __init__(self, source: list, func=None):
+        self.func = func if func is not None else operator.add
+        self.size = len(source)
+        self.tree = [*[None] * self.size, *source]
+        self._build()
 
     def _build(self):
         for i in range(self.size - 1, 0, -1):

@@ -1,13 +1,17 @@
+import operator
 import random
-import timeit
 import statistics
+import timeit
 
 from typing import Type, List
 
 import pysegmenttree._pysegmenttree_py
+import pysegmenttree.c_extensions
+
 
 IMPLEMENTATIONS = {
     "PySegmentTree": pysegmenttree._pysegmenttree_py.SegmentTree,
+    "CSegmentTree": pysegmenttree.c_extensions.IntSegmentTree,
 }
 
 
@@ -26,7 +30,7 @@ mean: {statistics.mean(timeit_results)}""".strip()
     )
 
 
-def bench_build(tree_cls_name: str, tree_cls: Type, size: int = 100_000):
+def bench_build(tree_cls_name: str, tree_cls: Type, size: int = 1_000_000):
     print(f"\n{tree_cls_name}: build")
     print(f"Tree size: {size}")
 
@@ -96,4 +100,4 @@ if __name__ == "__main__":
     for tree_cls_name, tree_cls in IMPLEMENTATIONS.items():
         bench_build(tree_cls_name, tree_cls)
         bench_query(tree_cls_name, tree_cls)
-        bench_update(tree_cls_name, tree_cls)
+        # bench_update(tree_cls_name, tree_cls)

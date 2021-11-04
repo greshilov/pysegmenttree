@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 CFLAGS = ["-O2"]
+# CFLAGS = ["-O0", "-g", "-Wall"]
 
 with open(ROOT / "pysegmenttree" / "__init__.py") as fp:
     try:
@@ -16,8 +17,10 @@ with open(ROOT / "pysegmenttree" / "__init__.py") as fp:
 
 extensions = [
     Extension(
-        "pysegmenttree._pysegmenttree",
-        ["pysegmenttree/_pysegmenttree.c"],
+        "pysegmenttree.c_extensions",
+        [
+            "pysegmenttree/c_extensions.c",
+        ],
         extra_compile_args=CFLAGS,
     ),
 ]
