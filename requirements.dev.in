@@ -1,4 +1,3 @@
 black
 pytest~=6.0
-pip-tools~=6.4.0
--e .
+pip-tools~=6.4

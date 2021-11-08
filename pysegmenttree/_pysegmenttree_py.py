@@ -1,8 +1,15 @@
 import operator
+from typing import (
+    Callable,
+    List,
+    Optional,
+)
+
+from ._abc import AbstractSegmentTree, T
 
 
-class SegmentTree:
-    def __init__(self, source: list, func=None):
+class PySegmentTree(AbstractSegmentTree):
+    def __init__(self, source: List[T], func: Optional[Callable[[T, T], T]] = None):
         self.func = func if func is not None else operator.add
         self.size = len(source)
         self.tree = [*[None] * self.size, *source]
@@ -13,7 +20,7 @@ class SegmentTree:
             # Iteratively construct parent nodes using child ones
             self.tree[i] = self.func(self.tree[i << 1], self.tree[i << 1 | 1])
 
-    def query(self, start: int, end: int):
+    def query(self, start: int, end: int) -> T:
         if start > end:
             raise IndexError(f"Invalid interval start > end ({start} > {end})")
 
@@ -39,7 +46,7 @@ class SegmentTree:
             right >>= 1
         return res
 
-    def update(self, i: int, value):
+    def update(self, i: int, value: T):
         if i > self.size - 1 or i < 0:
             raise IndexError("SegmentTree index out of range")
 

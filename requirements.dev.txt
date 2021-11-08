@@ -4,11 +4,9 @@
 #
 #    pip-compile requirements.dev.in
 #
--e file:///home/s/c/pysegmenttree
-    # via -r requirements.dev.in
 attrs==21.2.0
     # via pytest
-black==21.9b0
+black==21.10b0
     # via -r requirements.dev.in
 click==8.0.3
     # via
@@ -18,11 +16,11 @@ iniconfig==1.1.1
     # via pytest
 mypy-extensions==0.4.3
     # via black
-packaging==21.0
+packaging==21.2
     # via pytest
 pathspec==0.9.0
     # via black
-pep517==0.11.0
+pep517==0.12.0
     # via pip-tools
 pip-tools==6.4.0
     # via -r requirements.dev.in
@@ -30,17 +28,17 @@ platformdirs==2.4.0
     # via black
 pluggy==1.0.0
     # via pytest
-py==1.10.0
+py==1.11.0
     # via pytest
 pyparsing==2.4.7
     # via packaging
 pytest==6.2.5
     # via -r requirements.dev.in
-regex==2021.10.8
+regex==2021.11.2
     # via black
 toml==0.10.2
     # via pytest
-tomli==1.2.1
+tomli==1.2.2
     # via
     #   black
     #   pep517

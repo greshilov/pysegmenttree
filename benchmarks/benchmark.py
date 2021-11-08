@@ -10,8 +10,8 @@ import pysegmenttree.c_extensions
 
 
 IMPLEMENTATIONS = {
-    "PySegmentTree": pysegmenttree._pysegmenttree_py.SegmentTree,
-    "CSegmentTree": pysegmenttree.c_extensions.IntSegmentTree,
+    "PySegmentTree": pysegmenttree._pysegmenttree_py.PySegmentTree,
+    "IntSegmentTree": pysegmenttree.c_extensions.IntSegmentTree,
 }
 
 
@@ -100,4 +100,4 @@ if __name__ == "__main__":
     for tree_cls_name, tree_cls in IMPLEMENTATIONS.items():
         bench_build(tree_cls_name, tree_cls)
         bench_query(tree_cls_name, tree_cls)
-        # bench_update(tree_cls_name, tree_cls)
+        bench_update(tree_cls_name, tree_cls)

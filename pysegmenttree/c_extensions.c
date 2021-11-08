@@ -5,7 +5,7 @@
 
 typedef struct {
     PyObject_HEAD
-    int size;
+    Py_ssize_t size;
     long *tree;
 } IntSegmentTreeObject;
 
@@ -51,8 +51,9 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
             int overflow;
             long val = PyLong_AsLongAndOverflow(item, &overflow);
 
-            if (overflow == 0) {
-                // ERROR
+            if (overflow != 0) {
+                PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
+                return -1;
             }
             self->tree[size + i] = val;
         }
@@ -61,7 +62,12 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
             long left = self->tree[i << 1];
             long right = self->tree[i << 1 | 1];
 
-            self->tree[i] = left + right;  // possible overflow
+            long res;
+            if (__builtin_saddl_overflow(left, right, &res)) {
+                PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
+                return -1;
+            }
+            self->tree[i] = res;
         }
     }
     return 0;
@@ -77,8 +83,8 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
                                      &left, &right))
         return NULL;
 
-    if (left >= right || left < 0 || right > self->size - 1) {
-        return Py_None;
+    if (left >= right || left < 0) {
+        Py_RETURN_NONE;
     }
     
     long res = 0;
@@ -100,20 +106,60 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
         right >>= 1;
     }
 
-    PyObject *respy = PyLong_FromLong(res);  // Check overflow
+    PyObject *respy = PyLong_FromLong(res);
     return respy;
+}
+
+
+static PyObject *
+intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
+{
+    static char *kwlist[] = {"i", "value", NULL};
+    Py_ssize_t i;
+    long value;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "nl|", kwlist,
+                                     &i, &value))
+        return NULL;
+    
+    if (i > self->size - 1 || i < 0) {
+        PyErr_SetString(PyExc_IndexError, "IntSegmentTree index out of range");
+        return NULL;
+    }
+
+    Py_ssize_t parent, indx;
+    long left_child = 0, right_child = 0;
+
+    indx = i + self->size;
+    self->tree[indx] = value;
+    parent = indx >> 1;
+
+    while (parent > 0) {
+        left_child = self->tree[parent << 1];
+        right_child = self->tree[parent << 1 | 1];
+
+        if (__builtin_saddl_overflow(left_child, right_child, &self->tree[parent])) {
+            PyErr_SetString(PyExc_OverflowError, "Overflow while updating the tree");
+            return NULL;
+        }
+        parent >>= 1;
+    }
+
+    Py_RETURN_NONE;
 }
 
 static PyMemberDef intsegmenttree_members[] = {
     {"size", T_INT, offsetof(IntSegmentTreeObject, size), 0,
      "Size of the tree"},
-    {NULL}  /* Sentinel */
+    {NULL},  /* Sentinel */
 };
 
 static PyMethodDef intsegmenttree_methods[] = {
     {"query", (PyCFunction) intsegmenttree_query, METH_VARARGS | METH_KEYWORDS,
     "Performs the query operation"},
-    {NULL}  /* Sentinel */
+    {"update", (PyCFunction) intsegmenttree_update, METH_VARARGS | METH_KEYWORDS,
+    "Performs the update operation"},
+    {NULL},  /* Sentinel */
 };
 
 static PyTypeObject intsegmenttree_type = {
