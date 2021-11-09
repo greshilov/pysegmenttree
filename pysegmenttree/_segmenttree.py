@@ -4,7 +4,7 @@ from ._abc import AbstractSegmentTree, T
 from ._pysegmenttree_py import PySegmentTree
 
 try:
-    from .c_extensions import IntSegmentTree
+    from .c_extensions import IntSegmentTree, FloatSegmentTree
 
     C_EXTENSIONS = True
 except ImportError:
@@ -18,6 +18,8 @@ def stree(
         if C_EXTENSIONS:
             if source and isinstance(source[0], int) and func is None:
                 return IntSegmentTree(source)
+            if source and isinstance(source[0], float) and func is None:
+                return FloatSegmentTree(source)
     except OverflowError:
         pass
 

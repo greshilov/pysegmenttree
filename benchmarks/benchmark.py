@@ -12,6 +12,7 @@ import pysegmenttree.c_extensions
 IMPLEMENTATIONS = {
     "PySegmentTree": pysegmenttree._pysegmenttree_py.PySegmentTree,
     "IntSegmentTree": pysegmenttree.c_extensions.IntSegmentTree,
+    "FloatSegmentTree": pysegmenttree.c_extensions.FloatSegmentTree,
 }
 
 

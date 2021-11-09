@@ -2,13 +2,19 @@ import random
 import pytest
 
 from pysegmenttree import PySegmentTree, stree
-from pysegmenttree.c_extensions import IntSegmentTree
+from pysegmenttree.c_extensions import IntSegmentTree, FloatSegmentTree
 from pysegmenttree.test_utils import VerifySegmentTree
+
+
+CLASSES = [PySegmentTree, IntSegmentTree, FloatSegmentTree]
 
 
 def test_stree():
     tree = stree([18, 17, 13, 19, 15, 11, 20, 12, 33, 25])
     assert isinstance(tree, IntSegmentTree)
+
+    tree = stree([18.5, 17.1, 13.0, 19.2, 15.0, 11.0, 20.0, 12.1, 33.0, 25.0])
+    assert isinstance(tree, FloatSegmentTree)
 
     tree = stree([int(2 ** 63 - 1), 17, 13, 19, 15, 11, 20, 12, 33, 25])
     assert isinstance(tree, PySegmentTree)
@@ -17,12 +23,12 @@ def test_stree():
     assert isinstance(tree, PySegmentTree)
 
 
-@pytest.mark.parametrize("cls", [PySegmentTree, IntSegmentTree])
+@pytest.mark.parametrize("cls", CLASSES)
 def test_build(cls):
     tree = cls([18, 17, 13, 19, 15, 11, 20, 12, 33, 25])
 
 
-@pytest.mark.parametrize("cls", [PySegmentTree, IntSegmentTree])
+@pytest.mark.parametrize("cls", CLASSES)
 def test_query(cls):
     source = [18, 17, 13, 19, 15, 11, 20, 12, 33, 25]
 
@@ -36,7 +42,7 @@ def test_query(cls):
         assert tree.query(start, end) == expected
 
 
-@pytest.mark.parametrize("cls", [PySegmentTree, IntSegmentTree])
+@pytest.mark.parametrize("cls", CLASSES)
 def test_update(cls):
     source = [18, 17, 13, 19, 15, 11, 20, 12, 33, 25]
     tree = cls(source=source)
@@ -51,7 +57,7 @@ def test_update(cls):
     assert tree.query(0, len(source)) == 158
 
 
-@pytest.mark.parametrize("cls", [PySegmentTree, IntSegmentTree])
+@pytest.mark.parametrize("cls", CLASSES)
 def test_query_random(cls):
     random.seed(42)
 
@@ -68,7 +74,7 @@ def test_query_random(cls):
         assert tree.query(left, right) == verify_tree.query(left, right)
 
 
-@pytest.mark.parametrize("cls", [PySegmentTree, IntSegmentTree])
+@pytest.mark.parametrize("cls", CLASSES)
 def test_query_n_update_random(cls):
     random.seed(-42)
 
