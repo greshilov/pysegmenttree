@@ -6,16 +6,34 @@
 #
 attrs==21.2.0
     # via pytest
+backports.entry-points-selectable==1.1.1
+    # via virtualenv
 black==21.10b0
     # via -r requirements.dev.in
+cfgv==3.3.1
+    # via pre-commit
 click==8.0.3
     # via
     #   black
     #   pip-tools
+distlib==0.3.3
+    # via virtualenv
+filelock==3.3.2
+    # via virtualenv
+identify==2.3.5
+    # via pre-commit
 iniconfig==1.1.1
     # via pytest
+isort==5.10.1
+    # via -r requirements.dev.in
+mypy==0.910
+    # via -r requirements.dev.in
 mypy-extensions==0.4.3
-    # via black
+    # via
+    #   black
+    #   mypy
+nodeenv==1.6.0
+    # via pre-commit
 packaging==21.2
     # via pytest
 pathspec==0.9.0
@@ -25,25 +43,40 @@ pep517==0.12.0
 pip-tools==6.4.0
     # via -r requirements.dev.in
 platformdirs==2.4.0
-    # via black
+    # via
+    #   black
+    #   virtualenv
 pluggy==1.0.0
     # via pytest
+pre-commit==2.15.0
+    # via -r requirements.dev.in
 py==1.11.0
     # via pytest
 pyparsing==2.4.7
     # via packaging
 pytest==6.2.5
     # via -r requirements.dev.in
+pyyaml==6.0
+    # via pre-commit
 regex==2021.11.2
     # via black
+six==1.16.0
+    # via virtualenv
 toml==0.10.2
-    # via pytest
+    # via
+    #   mypy
+    #   pre-commit
+    #   pytest
 tomli==1.2.2
     # via
     #   black
     #   pep517
 typing-extensions==3.10.0.2
-    # via black
+    # via
+    #   black
+    #   mypy
+virtualenv==20.10.0
+    # via pre-commit
 wheel==0.37.0
     # via pip-tools
 

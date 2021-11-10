@@ -1,10 +1,10 @@
 import random
+
 import pytest
 
 from pysegmenttree import PySegmentTree, stree
-from pysegmenttree.c_extensions import IntSegmentTree, FloatSegmentTree
+from pysegmenttree.c_extensions import FloatSegmentTree, IntSegmentTree
 from pysegmenttree.test_utils import VerifySegmentTree
-
 
 CLASSES = [PySegmentTree, IntSegmentTree, FloatSegmentTree]
 

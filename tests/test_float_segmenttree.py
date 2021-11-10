@@ -1,4 +1,5 @@
 import random
+
 import pytest
 
 from pysegmenttree.c_extensions import FloatSegmentTree
