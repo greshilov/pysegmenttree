@@ -14,8 +14,14 @@ click==8.0.3
     #   pip-tools
 iniconfig==1.1.1
     # via pytest
+isort==5.10.1
+    # via -r requirements.dev.in
+mypy==0.910
+    # via -r requirements.dev.in
 mypy-extensions==0.4.3
-    # via black
+    # via
+    #   black
+    #   mypy
 packaging==21.2
     # via pytest
 pathspec==0.9.0
@@ -37,13 +43,17 @@ pytest==6.2.5
 regex==2021.11.2
     # via black
 toml==0.10.2
-    # via pytest
+    # via
+    #   mypy
+    #   pytest
 tomli==1.2.2
     # via
     #   black
     #   pep517
 typing-extensions==3.10.0.2
-    # via black
+    # via
+    #   black
+    #   mypy
 wheel==0.37.0
     # via pip-tools
 

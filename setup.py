@@ -1,8 +1,6 @@
 import re
-
-from distutils.core import setup, Extension
+from distutils.core import Extension, setup
 from pathlib import Path
-
 
 ROOT = Path(__file__).parent
 CFLAGS = ["-O2"]

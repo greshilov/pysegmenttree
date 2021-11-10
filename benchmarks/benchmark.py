@@ -2,12 +2,10 @@ import operator
 import random
 import statistics
 import timeit
-
-from typing import Type, List
+from typing import List, Type
 
 import pysegmenttree._pysegmenttree_py
 import pysegmenttree.c_extensions
-
 
 IMPLEMENTATIONS = {
     "PySegmentTree": pysegmenttree._pysegmenttree_py.PySegmentTree,

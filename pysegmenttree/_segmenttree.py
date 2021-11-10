@@ -1,10 +1,10 @@
-from typing import Optional, Callable, List
+from typing import Callable, List, Optional
 
 from ._abc import AbstractSegmentTree, T
 from ._pysegmenttree_py import PySegmentTree
 
 try:
-    from .c_extensions import IntSegmentTree, FloatSegmentTree
+    from .c_extensions import FloatSegmentTree, IntSegmentTree
 
     C_EXTENSIONS = True
 except ImportError:

@@ -1,9 +1,5 @@
 import operator
-from typing import (
-    Callable,
-    List,
-    Optional,
-)
+from typing import Callable, List, Optional
 
 from ._abc import AbstractSegmentTree, T
 
@@ -20,7 +16,7 @@ class PySegmentTree(AbstractSegmentTree):
             # Iteratively construct parent nodes using child ones
             self.tree[i] = self.func(self.tree[i << 1], self.tree[i << 1 | 1])
 
-    def query(self, start: int, end: int) -> T:
+    def query(self, start: int, end: int) -> Optional[T]:
         if start > end:
             raise IndexError(f"Invalid interval start > end ({start} > {end})")
 
