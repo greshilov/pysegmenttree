@@ -32,7 +32,7 @@ PyInit_c_extensions(void)
         Py_DECREF(m);
         return NULL;
     }
-    
+
     Py_INCREF(&floatsegmenttree_type);
     if (PyModule_AddObject(m, "FloatSegmentTree", (PyObject*)&floatsegmenttree_type) < 0)
     {
@@ -40,6 +40,6 @@ PyInit_c_extensions(void)
         Py_DECREF(m);
         return NULL;
     }
-    
+
     return m;
 }

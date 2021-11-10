@@ -10,7 +10,7 @@ typedef struct {
 } FloatSegmentTreeObject;
 
 static void
-floatsegmenttree_dealloc(FloatSegmentTreeObject* self) 
+floatsegmenttree_dealloc(FloatSegmentTreeObject* self)
 {
     free(self->tree);
     Py_TYPE(self)->tp_free((PyObject*)self);
@@ -34,7 +34,7 @@ floatsegmenttree_init(FloatSegmentTreeObject *self, PyObject *args, PyObject *kw
 {
     static char *kwlist[] = {"source", NULL};
     PyObject *source = NULL;
-    
+
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist,
                                      &source))
         return -1;
@@ -73,7 +73,7 @@ floatsegmenttree_query(FloatSegmentTreeObject *self, PyObject *args, PyObject *k
     if (left >= right || left < 0) {
         Py_RETURN_NONE;
     }
-    
+
     double res = 0;
     left += self->size;
     right += self->size;
@@ -108,7 +108,7 @@ floatsegmenttree_update(FloatSegmentTreeObject *self, PyObject *args, PyObject *
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "nd|", kwlist,
                                      &i, &value))
         return NULL;
-    
+
     if (i > self->size - 1 || i < 0) {
         PyErr_SetString(PyExc_IndexError, "FloatSegmentTree index out of range");
         return NULL;

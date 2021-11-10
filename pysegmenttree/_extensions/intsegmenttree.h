@@ -40,7 +40,7 @@ typedef struct {
 } IntSegmentTreeObject;
 
 static void
-intsegmenttree_dealloc(IntSegmentTreeObject* self) 
+intsegmenttree_dealloc(IntSegmentTreeObject* self)
 {
     free(self->tree);
     Py_TYPE(self)->tp_free((PyObject*)self);
@@ -64,7 +64,7 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"source", NULL};
     PyObject *source = NULL;
-    
+
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist,
                                      &source))
         return -1;
@@ -116,7 +116,7 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
     if (left >= right || left < 0) {
         Py_RETURN_NONE;
     }
-    
+
     long long res = 0;
     left += self->size;
     right += self->size;
@@ -151,7 +151,7 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "nL|", kwlist,
                                      &i, &value))
         return NULL;
-    
+
     if (i > self->size - 1 || i < 0) {
         PyErr_SetString(PyExc_IndexError, "IntSegmentTree index out of range");
         return NULL;
@@ -172,7 +172,7 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
             PyErr_SetString(PyExc_OverflowError, "Overflow while updating the tree");
             return NULL;
         }
-        
+
         parent >>= 1;
     }
 
