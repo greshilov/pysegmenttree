@@ -1,12 +1,42 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include <stdbool.h>
 #include "structmember.h"
+
+#if defined(_WIN32)
+    #define __builtin_saddll_overflow saddll_overflow
+
+    /*
+        msvc doesn't have builtin intrinsic function for safe integer addition,
+        thus we create our own.
+    */
+    inline bool saddll_overflow(long long a, long long b, long long *res) {
+        unsigned long long buf = 0;
+
+        if (a > 0 && b > 0) {
+            buf = a + b;
+
+            if (buf > LLONG_MAX) {
+                return true;
+            }
+        } else if (a < 0 && b < 0) {
+            buf = -a - b;
+
+            if (buf > -LLONG_MIN) {
+                return true;
+            }
+        }
+
+        *res = a + b;
+        return false;
+    }
+#endif
 
 typedef struct {
     PyObject_HEAD
     Py_ssize_t size;
-    long *tree;
+    long long *tree;
 } IntSegmentTreeObject;
 
 static void
@@ -42,14 +72,14 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
     if (source) {
         Py_ssize_t size = PyList_Size(source);
         self->size = size;
-        self->tree = (long*) malloc(sizeof(long) * 2 * size);
+        self->tree = (long long*) malloc(sizeof(long long) * 2 * size);
 
         /* Fill in the elements from source */
         for (Py_ssize_t i = 0; i < size; i++) {
             PyObject *item = PyList_GetItem(source, i);
 
             int overflow;
-            long val = PyLong_AsLongAndOverflow(item, &overflow);
+            long long val = PyLong_AsLongLongAndOverflow(item, &overflow);
 
             if (overflow != 0) {
                 PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
@@ -59,11 +89,11 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
         }
 
         for (Py_ssize_t i = size - 1; i > 0; i--) {
-            long left = self->tree[i << 1];
-            long right = self->tree[i << 1 | 1];
+            long long left = self->tree[i << 1];
+            long long right = self->tree[i << 1 | 1];
 
-            long res;
-            if (__builtin_saddl_overflow(left, right, &res)) {
+            long long res;
+            if (__builtin_saddll_overflow(left, right, &res)) {
                 PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
                 return -1;
             }
@@ -87,7 +117,7 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
         Py_RETURN_NONE;
     }
     
-    long res = 0;
+    long long res = 0;
     left += self->size;
     right += self->size;
 
@@ -106,7 +136,7 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
         right >>= 1;
     }
 
-    PyObject *respy = PyLong_FromLong(res);
+    PyObject *respy = PyLong_FromLongLong(res);
     return respy;
 }
 
@@ -116,9 +146,9 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
 {
     static char *kwlist[] = {"i", "value", NULL};
     Py_ssize_t i;
-    long value;
+    long long value;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "nl|", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "nL|", kwlist,
                                      &i, &value))
         return NULL;
     
@@ -128,7 +158,7 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
     }
 
     Py_ssize_t parent, indx;
-    long left_child = 0, right_child = 0;
+    long long left_child = 0, right_child = 0;
 
     indx = i + self->size;
     self->tree[indx] = value;
@@ -138,10 +168,11 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
         left_child = self->tree[parent << 1];
         right_child = self->tree[parent << 1 | 1];
 
-        if (__builtin_saddl_overflow(left_child, right_child, &self->tree[parent])) {
+        if (__builtin_saddll_overflow(left_child, right_child, &self->tree[parent])) {
             PyErr_SetString(PyExc_OverflowError, "Overflow while updating the tree");
             return NULL;
         }
+        
         parent >>= 1;
     }
 
