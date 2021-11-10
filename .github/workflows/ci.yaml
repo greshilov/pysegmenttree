@@ -48,4 +48,4 @@ jobs:
       env:
         COLOR: 'yes'
       run: |
-        pytest
+        pytest -v

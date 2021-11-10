@@ -40,6 +40,6 @@ PyInit_c_extensions(void)
         Py_DECREF(m);
         return NULL;
     }
-
+    
     return m;
 }

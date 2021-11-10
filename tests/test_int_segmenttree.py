@@ -13,9 +13,18 @@ def test_build_overflow():
         int_64 = int(2 ** 63 - 2)
         int_tree = IntSegmentTree([int_64, 1, 2])
 
+    with pytest.raises(OverflowError):
+        int_64 = int(-(2 ** 63) + 1)
+        int_tree = IntSegmentTree([int_64, -1, -1])
+
 
 def test_update_overflow():
+    int_64 = int(2 ** 63 - 3)
+    int_tree = IntSegmentTree([int_64, 1, 1])
     with pytest.raises(OverflowError):
-        int_64 = int(2 ** 63 - 3)
-        int_tree = IntSegmentTree([int_64, 1, 1])
         int_tree.update(2, 2)
+
+    int_64 = int(-(2 ** 63) + 2)
+    int_tree = IntSegmentTree([int_64, -1, -1])
+    with pytest.raises(OverflowError):
+        int_tree.update(2, -2)
