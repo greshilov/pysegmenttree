@@ -60,6 +60,12 @@ floatsegmenttree_init(FloatSegmentTreeObject *self, PyObject *args, PyObject *kw
     return 0;
 }
 
+static inline Py_ssize_t
+floatsegmenttree_mp_len(FloatSegmentTreeObject *self)
+{
+    return self->size;
+}
+
 static PyObject *
 floatsegmenttree_query(FloatSegmentTreeObject *self, PyObject *args, PyObject *kwds)
 {
@@ -132,10 +138,8 @@ floatsegmenttree_update(FloatSegmentTreeObject *self, PyObject *args, PyObject *
     Py_RETURN_NONE;
 }
 
-static PyMemberDef floatsegmenttree_members[] = {
-    {"size", T_INT, offsetof(FloatSegmentTreeObject, size), 0,
-     "Size of the tree"},
-    {NULL},  /* Sentinel */
+static PyMappingMethods floatsegmenttree_mapping = {
+    .mp_length = (lenfunc)floatsegmenttree_mp_len,
 };
 
 static PyMethodDef floatsegmenttree_methods[] = {
@@ -153,8 +157,8 @@ static PyTypeObject floatsegmenttree_type = {
     .tp_dealloc = (destructor)floatsegmenttree_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_doc = "FloatSegmentTree",
+    .tp_as_mapping = &floatsegmenttree_mapping,
     .tp_methods = floatsegmenttree_methods,
-    .tp_members = floatsegmenttree_members,
     .tp_init = (initproc)floatsegmenttree_init,
     .tp_alloc = PyType_GenericAlloc,
     .tp_new = floatsegmenttree_new,

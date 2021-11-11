@@ -2,10 +2,10 @@
 .update-pip:
 	@python -m pip install --upgrade pip
 	@pip install pip-tools
+	@touch .update-pip
 
 .develop: .update-pip
 	@pip install -r requirements.dev.txt
-	@pip install -e .
 	@touch .develop
 
 .PHONY: build
@@ -33,6 +33,10 @@ compile-deps: .update-pip
 fmt format:
 	python -m pre_commit run --all-files --show-diff-on-failure
 
+.PHONY: install
+install:
+	@python setup.py install
+
 .PHONY: lint
 lint: fmt mypy
 
@@ -41,5 +45,5 @@ mypy:
 	mypy pysegmenttree
 
 .PHONY: test
-test: .develop
+test: .develop install
 	@pytest -v

@@ -24,6 +24,12 @@ def test_stree():
 
 
 @pytest.mark.parametrize("cls", CLASSES)
+def test_len(cls):
+    tree = cls([18, 17, 13, 19])
+    assert len(tree) == 4
+
+
+@pytest.mark.parametrize("cls", CLASSES)
 def test_build(cls):
     tree = cls([18, 17, 13, 19, 15, 11, 20, 12, 33, 25])
 

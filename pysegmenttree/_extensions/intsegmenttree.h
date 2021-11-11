@@ -103,6 +103,12 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
     return 0;
 }
 
+static inline Py_ssize_t
+intsegmenttree_mp_len(IntSegmentTreeObject *self)
+{
+    return self->size;
+}
+
 static PyObject *
 intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
 {
@@ -179,11 +185,11 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
     Py_RETURN_NONE;
 }
 
-static PyMemberDef intsegmenttree_members[] = {
-    {"size", T_INT, offsetof(IntSegmentTreeObject, size), 0,
-     "Size of the tree"},
-    {NULL},  /* Sentinel */
+
+static PyMappingMethods intsegmenttree_mapping = {
+    .mp_length = (lenfunc)intsegmenttree_mp_len,
 };
+
 
 static PyMethodDef intsegmenttree_methods[] = {
     {"query", (PyCFunction) intsegmenttree_query, METH_VARARGS | METH_KEYWORDS,
@@ -200,8 +206,8 @@ static PyTypeObject intsegmenttree_type = {
     .tp_dealloc = (destructor)intsegmenttree_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_doc = "IntSegmentTree",
+    .tp_as_mapping = &intsegmenttree_mapping,
     .tp_methods = intsegmenttree_methods,
-    .tp_members = intsegmenttree_members,
     .tp_init = (initproc)intsegmenttree_init,
     .tp_alloc = PyType_GenericAlloc,
     .tp_new = intsegmenttree_new,
