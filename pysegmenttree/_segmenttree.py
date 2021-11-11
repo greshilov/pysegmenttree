@@ -14,6 +14,10 @@ except ImportError:
 def stree(
     source: List[T], func: Optional[Callable[[T, T], T]] = None
 ) -> AbstractSegmentTree:
+    """
+    Automatically detects the type of input container, and uses the
+    fastest possible segment tree implementation.
+    """
     try:
         if C_EXTENSIONS:
             if source and isinstance(source[0], int) and func is None:

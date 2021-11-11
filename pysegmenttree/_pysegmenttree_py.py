@@ -5,6 +5,8 @@ from ._abc import AbstractSegmentTree, T
 
 
 class PySegmentTree(AbstractSegmentTree):
+    """Pure python segment tree implementation."""
+
     def __init__(self, source: List[T], func: Optional[Callable[[T, T], T]] = None):
         self.func = func if func is not None else operator.add
         self._size = len(source)
@@ -17,6 +19,12 @@ class PySegmentTree(AbstractSegmentTree):
             self._tree[i] = self.func(self._tree[i << 1], self._tree[i << 1 | 1])
 
     def query(self, start: int, end: int) -> Optional[T]:
+        """
+        Perform a query on the specified interval using func specified in constructor.
+        For example, determines the sum of the interval [start, end).
+
+        Computational complexity: O(Log[N])
+        """
         if start > end:
             raise IndexError(f"Invalid interval start > end ({start} > {end})")
 
@@ -43,6 +51,11 @@ class PySegmentTree(AbstractSegmentTree):
         return res
 
     def update(self, i: int, value: T):
+        """
+        Set i-th element of the tree to the specified value.
+
+        Computational complexity: O(Log[N])
+        """
         if i > self._size - 1 or i < 0:
             raise IndexError("SegmentTree index out of range")
 
