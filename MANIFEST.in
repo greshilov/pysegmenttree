@@ -1,0 +1,9 @@
+include LICENSE
+include README.md
+include Makefile
+graft pysegmenttree
+graft tests
+global-exclude *.pyc
+include pysegmenttree/*.c
+exclude pysegmenttree/*.so
+exclude pysegmenttree/*.pyd
