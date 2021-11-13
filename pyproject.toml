@@ -4,7 +4,7 @@ requires = ["setuptools>=40", "wheel>=0.32"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q"
+addopts = "-ra -q --cov=pysegmenttree --cov-report=xml"
 testpaths = [
     "tests",
 ]

@@ -64,3 +64,10 @@ jobs:
         COLOR: 'yes'
       run: |
         pytest -v
+    - name: Upload coverage
+      uses: codecov/codecov-action@v2.1.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        flags: unit
+        fail_ci_if_error: false
