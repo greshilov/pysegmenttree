@@ -9,7 +9,7 @@
 	@touch .develop
 
 .PHONY: build
-build:
+build: clean
 	@python setup.py build
 
 .PHONY: clean
@@ -19,7 +19,7 @@ clean:
 	@rm -f `find . -type f -name '*.py[co]' `
 	@rm -rf build
 	@python setup.py clean
-	@rm -f .develop
+	@rm -f .develop .update-pip
 	@rm -rf *.egg-info
 	@rm -rf .pytest_cache
 	@rm -rf .mypy_cache
@@ -33,10 +33,6 @@ compile-deps: .update-pip
 fmt format:
 	python -m pre_commit run --all-files --show-diff-on-failure
 
-.PHONY: install
-install:
-	@python setup.py install
-
 .PHONY: lint
 lint: fmt mypy
 
@@ -45,5 +41,5 @@ mypy:
 	mypy pysegmenttree
 
 .PHONY: test
-test: .develop install
+test: .develop
 	@pytest -v
