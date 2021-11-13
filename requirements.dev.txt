@@ -16,6 +16,8 @@ click==8.0.3
     # via
     #   black
     #   pip-tools
+coverage==6.1.2
+    # via pytest-cov
 distlib==0.3.3
     # via virtualenv
 filelock==3.3.2
@@ -55,6 +57,10 @@ py==1.11.0
 pyparsing==2.4.7
     # via packaging
 pytest==6.2.5
+    # via
+    #   -r requirements.dev.in
+    #   pytest-cov
+pytest-cov==3.0.0
     # via -r requirements.dev.in
 pyyaml==6.0
     # via pre-commit
@@ -72,6 +78,7 @@ toml==0.10.2
 tomli==1.2.2
     # via
     #   black
+    #   coverage
     #   pep517
 typing-extensions==3.10.0.2
     # via

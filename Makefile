@@ -6,6 +6,7 @@
 
 .develop: .update-pip
 	@pip install -r requirements.dev.txt
+	@pip install -e .
 	@touch .develop
 
 .PHONY: build
