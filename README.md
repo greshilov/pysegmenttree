@@ -1,4 +1,8 @@
 # pysegmenttree
+[![GitHub license](https://img.shields.io/github/license/greshilov/pysegmenttree)](https://github.com/greshilov/pysegmenttree/blob/master/LICENSE)
+[![CI](https://github.com/greshilov/pysegmenttree/actions/workflows/ci.yaml/badge.svg)](https://github.com/greshilov/pysegmenttree/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/greshilov/pysegmenttree/branch/master/graph/badge.svg?token=BXXCG2JBPK)](https://codecov.io/gh/greshilov/pysegmenttree)
+
 Segment tree is a data structure to store information about intervals and perform efficient queries on them.
 
 Properties of the segment tree with the size N.
