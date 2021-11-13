@@ -1,13 +1,13 @@
 import operator
 from typing import Callable, List, Optional
 
-from ._abc import AbstractSegmentTree, T
+from ._abc import AbstractSegmentTree, Func, T
 
 
 class PySegmentTree(AbstractSegmentTree):
     """Pure python segment tree implementation."""
 
-    def __init__(self, source: List[T], func: Optional[Callable[[T, T], T]] = None):
+    def __init__(self, source: List[T], func: Optional[Func] = None):
         self.func = func if func is not None else operator.add
         self._size = len(source)
         self._tree = [*[None] * self._size, *source]

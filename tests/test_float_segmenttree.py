@@ -6,6 +6,16 @@ from pysegmenttree.c_extensions import FloatSegmentTree
 from pysegmenttree.test_utils import VerifySegmentTree
 
 
+def test_update_wrong_type():
+    float_tree = FloatSegmentTree([1.0, 2.0, 3.0, 4.0])
+
+    float_tree.update(0, 2)
+    assert float_tree.query(0, 2) == 4.0
+
+    with pytest.raises(TypeError):
+        float_tree.update(0, None)
+
+
 def test_float_query_n_update_random():
     random.seed(-42)
 

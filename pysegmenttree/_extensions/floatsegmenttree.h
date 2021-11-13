@@ -32,11 +32,12 @@ floatsegmenttree_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static int
 floatsegmenttree_init(FloatSegmentTreeObject *self, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"source", NULL};
+    static char *kwlist[] = {"source", "func", NULL};
     PyObject *source = NULL;
+    char* func = NULL;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist,
-                                     &source))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|s", kwlist,
+                                     &source, &func))
         return -1;
 
     if (source) {

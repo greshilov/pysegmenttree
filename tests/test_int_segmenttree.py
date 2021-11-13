@@ -8,6 +8,12 @@ def test_build():
     int_tree = IntSegmentTree([18, 17, 13, 19, 15, 11, 20, 12, 33, 25])
 
 
+def test_update_wrong_type():
+    int_tree = IntSegmentTree([1, 2, 3, 4])
+    with pytest.raises(TypeError):
+        int_tree.update(0, 10.5)
+
+
 def test_build_overflow():
     with pytest.raises(OverflowError):
         int_64 = int(2 ** 63 - 2)
