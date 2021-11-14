@@ -30,6 +30,10 @@ compile-deps: .update-pip
 	pip-compile --allow-unsafe -q --strip-extras \
 		requirements.dev.in
 
+.PHONY: doc
+doc: .develop
+	@make -C docs html SPHINXOPTS="-W -E"
+
 .PHONY: fmt format
 fmt format:
 	python -m pre_commit run --all-files --show-diff-on-failure
