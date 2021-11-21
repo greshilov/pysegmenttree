@@ -25,14 +25,14 @@ jobs:
     - name: Cache PyPI
       uses: actions/cache@v2.1.6
       with:
-        key: pip-lint-${{ hashFiles('requirements.dev.txt') }}
+        key: pip-lint-${{ hashFiles('requirements/*.txt') }}
         path: ~/.cache/pip
         restore-keys: |
             pip-lint-
     - name: Install dependencies
       uses: py-actions/py-dependency-install@v2
       with:
-        path: requirements.dev.txt
+        path: requirements/requirements.dev.txt
     - name: Pre-Commit hooks
       uses: pre-commit/action@v2.0.3
     - name: Build docs
@@ -63,14 +63,14 @@ jobs:
     - name: Cache PyPI
       uses: actions/cache@v2
       with:
-        key: pip-ci-${{ runner.os }}-${{ matrix.pyver }}-${{ hashFiles('requirements.dev.txt') }}
+        key: pip-ci-${{ runner.os }}-${{ matrix.pyver }}-${{ hashFiles('requirements/*.txt') }}
         path: ${{ steps.pip-cache.outputs.dir }}
         restore-keys: |
             pip-ci-${{ runner.os }}-${{ matrix.pyver }}
     - name: Install dependencies
       uses: py-actions/py-dependency-install@v2
       with:
-        path: requirements.dev.txt
+        path: requirements/requirements.dev.txt
     - name: Install itself
       run: |
         pip install -e .

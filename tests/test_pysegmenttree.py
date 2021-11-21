@@ -1,25 +1,5 @@
-import dataclasses
-import functools
-import math
-
 from pysegmenttree import PySegmentTree
-from pysegmenttree.test_utils import VerifySegmentTree
-
-
-@dataclasses.dataclass
-@functools.total_ordering
-class Vec2D:
-    x: float
-    y: float
-
-    def sqr_length(self):
-        return self.x * self.x + self.y * self.y
-
-    def __eq__(self, other: "Vec2D"):
-        return self.x == other.x and self.y == other.y
-
-    def __lt__(self, other: "Vec2D"):
-        return self.sqr_length() < other.sqr_length()
+from pysegmenttree.test_utils import Vec2D, VerifySegmentTree
 
 
 def test_custom_obj():
