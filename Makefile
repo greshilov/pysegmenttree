@@ -5,7 +5,7 @@
 	@touch .update-pip
 
 .develop: .update-pip
-	@pip install -r requirements.dev.txt
+	@pip install -r requirements/requirements.dev.txt
 	@pip install -e .
 	@touch .develop
 
@@ -28,7 +28,9 @@ clean:
 .PHONY: compile-deps
 compile-deps: .update-pip
 	pip-compile --allow-unsafe -q --strip-extras \
-		requirements.dev.in
+		requirements/requirements.dev.in
+	pip-compile --allow-unsafe -q --strip-extras \
+		requirements/requirements.bench.in
 
 .PHONY: doc
 doc: .develop

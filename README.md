@@ -27,6 +27,7 @@ $ pip install pysegmenttree
 >> from pysegmenttree import stree
 
 # Build the tree
+# 'sum' function is used by default
 >> tree = stree([5, 1, 9, 4, 5, 11])
 
 # Find sum on the interval [1, 4)
@@ -42,24 +43,40 @@ $ pip install pysegmenttree
 # Docs
 Docs are available [here](https://pysegmenttree.readthedocs.io/en/latest/).
 
+# Perfomance
+
+Three basic segment tree operations were benchmarked for three different types `int`, `float` and `Vec2D`.
+I included results for 3 other python segment trees libraries for comparison.
+All code related to benchmarking can be found in `benchmarks` subdirectory.
+
+* [segment-tree](https://github.com/evgeth/segment_tree)
+* [segmenttree](https://github.com/1e0ng/segmenttree)
+* [c-segment-tree](https://github.com/gilaniasher/segtree-c-python)
+
+## init
+| Param | Value |
+| --------- | ------- |
+| Tree size | 100 000 |
+
+
+[<img src="benchmarks/with_other_libs/data/init.png"/>](benchmarks/with_other_libs/data/init.png "init")
+
+## query
+| Param | Value |
+| --------- | ------- |
+| Tree size | 100 000 |
+| Queries performed | 10 000 |
+
+[<img src="benchmarks/with_other_libs/data/query.png"/>](benchmarks/with_other_libs/data/query.png "query")
+
+## update
+| Param | Value |
+| --------- | ------- |
+| Tree size | 100 000 |
+| Updates performed | 10 000 |
+
+[<img src="benchmarks/with_other_libs/data/update.png"/>](benchmarks/with_other_libs/data/update.png "update")
+
+
 # Development
-
-## Insall dependencies
-```
-pip install -r requirements.dev.txt
-pip install -e .
-```
-## Lock dependencies
-```
-pip-compile requirements.dev.in
-```
-
-## Test
-```
-pytest -v
-```
-
-## Benchmark
-```
-python benchmarks/benchmark.py
-```
+Read more [here](DEVELOPMENT.md).
