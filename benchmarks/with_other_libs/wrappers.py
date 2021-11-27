@@ -95,9 +95,9 @@ class PySegmentTreeWrapper(ThinWrapper):
     LIB = "pysegmenttree"
 
     FUNCTION_TRANSLATOR = {
-        "sum": None,
-        "min": min,
-        "max": max,
+        "sum": pysegmenttree.QueryFunction.SUM,
+        "min": pysegmenttree.QueryFunction.MIN,
+        "max": pysegmenttree.QueryFunction.MAX,
     }
 
     def __init__(self, source, function: str):
