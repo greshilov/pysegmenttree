@@ -41,7 +41,7 @@ $ pip install pysegmenttree
 ```
 
 # Advanced usage
-There are three predefined query functions available, that can be used with `int` or `float` trees. Use them as follows:
+There are three predefined query functions available that can be used with `int` or `float` trees. Use them as follows:
 ```
 >> from pysegmenttree import stree, QueryFunction
 >> tree = stree([5, 1, 9, 4, 5, 11], func=QueryFunction.MIN)

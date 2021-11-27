@@ -8,32 +8,52 @@ Reference
 stree
 =====
 
-.. function:: stree(source: List[T], func: Optional[Callable[[T, T], T]] = None) -> AbstractSegmentTree
+.. function:: stree(source: List[T], func: Union[Callable[[T, T], T]], QueryFunction] = QueryFunction.SUM) -> AbstractSegmentTree
 
-    Function that returns a best suitable version of the segment tree for the given input.
+    Function that returns the best suitable version of the segment tree for the given input.
 
-    >>> st = stree([0, 1, 2, 3])
+    .. note::
+        To use all advantages of c-api extensions, you should use :class:`QueryFunction` enum memeber in `func` argument.
+
+    >>> st = stree([0, 1, 2, 3], func=QueryFunction.MIN)
     >>> type(st)
-    <pysegmenttree.c_extensions.IntSegmentTree object at 0x7f4b0c8dfc50>
+    <class 'pysegmenttree.c_extensions.IntSegmentTree'>
 
-    >>> st = stree([0.0, 1.0, 2.0, 3.0])
-    >>> type(st)
-    <pysegmenttree.c_extensions.FloatSegmentTree object at 0x7f4b0c8dfdb0>
+    But if you pass :func:`min` the slower version of the tree will be used, so be careful.
 
     >>> st = stree([0, 1, 2, 3], func=min)
     >>> type(st)
-    <pysegmenttree._pysegmenttree_py.PySegmentTree object at 0x7f4b0c9a18e0>
+    <class 'pysegmenttree._pysegmenttree_py.PySegmentTree'>
+
+    The same is true for the `float` trees.
+
+    >>> st = stree([0.0, 1.0, 2.0, 3.0])
+    >>> type(st)
+    <class 'pysegmenttree.c_extensions.FloatSegmentTree'>
+
+
+
+QueryFunction
+=============
+.. class:: QueryFunction
+
+    .. autoattribute:: SUM
+    .. autoattribute:: MIN
+    .. autoattribute:: MAX
+
+    Enum representing query functions that can be used to build segment trees using c-api extensions.
+
 
 
 PySegmentTree
 =============
 
-.. class:: PySegmentTree(source: List[T], func: Optional[Func] = None)
+.. class:: PySegmentTree(source: List[T], func: Union[Callable[[T, T], T]], QueryFunction] = QueryFunction.SUM)
 
-    Creates a segment tree instance.
+    Creates a pure python segment tree instance.
 
     **func** is a function that will be used in `query` method.
-    Must be a function with two arguments `T`, returning `T`(Type interface is `Callable[[T, T], T]`).
+    Must be either a function with two arguments `T`, returning `T` or the :class:`QueryFunction` enum member.
 
     >>> st = PySegmentTree([1.5, 1, 0, 2], func=min)
 
@@ -73,7 +93,7 @@ IntSegmentTree
     Typed version of the :class:`PySegmentTree` implemented in C using `long long int` type.
     The behavior is the same as for :class:`PySegmentTree` except few moments:
 
-    - **func** argument in the constructor has `str` type and currently doesn't affect anything. This type of tree is always `sum` tree.
+    - **func** argument in the constructor has `str` type and must be one of the :class:`QueryFunction` enum values ('sum', 'min', ...).
     - Raises :exc:`OverflowError` if any element exceeds `long long` type range.
     - Much faster than :class:`PySegmentTree`.
 
