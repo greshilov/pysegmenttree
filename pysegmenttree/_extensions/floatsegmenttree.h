@@ -7,6 +7,7 @@ typedef struct {
     PyObject_HEAD
     Py_ssize_t size;
     double *tree;
+    enum QueryFunc func;
 } FloatSegmentTreeObject;
 
 static void
@@ -40,6 +41,21 @@ floatsegmenttree_init(FloatSegmentTreeObject *self, PyObject *args, PyObject *kw
                                      &source, &func))
         return -1;
 
+    if (func != NULL) {
+        if (strcmp(func, "sum") == 0) {
+            self->func = Sum;
+        } else if (strcmp(func, "min") == 0) {
+            self->func = Min;
+        } else if (strcmp(func, "max") == 0) {
+            self->func = Max;
+        } else {
+            PyErr_SetString(PyExc_ValueError, "Invalid 'func' argument, must be 'sum', 'min' or 'max'");
+            return -1;
+        }
+    } else {
+        self->func = Sum;
+    }
+
     if (source) {
         Py_ssize_t size = PyList_Size(source);
         self->size = size;
@@ -55,7 +71,21 @@ floatsegmenttree_init(FloatSegmentTreeObject *self, PyObject *args, PyObject *kw
         for (Py_ssize_t i = size - 1; i > 0; i--) {
             double left = self->tree[i << 1];
             double right = self->tree[i << 1 | 1];
-            self->tree[i] = left + right;
+
+            switch(self->func) {
+                case Sum:
+                    self->tree[i] = left + right;
+                    break;
+                case Min:
+                    self->tree[i] = MIN(left, right);
+                    break;
+                case Max:
+                    self->tree[i] = MAX(left, right);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return -1;
+            }
         }
     }
     return 0;
@@ -81,19 +111,60 @@ floatsegmenttree_query(FloatSegmentTreeObject *self, PyObject *args, PyObject *k
         Py_RETURN_NONE;
     }
 
-    double res = 0;
     left += self->size;
     right += self->size;
+    double res;
+
+    switch(self->func) {
+        case Sum:
+            res = 0;
+            break;
+        case Min:
+        case Max:
+            res = self->tree[left];
+            break;
+        default:
+            Py_UNREACHABLE();
+            return NULL;
+    }
 
     while (left < right) {
         if (left & 1) {
-            res += self->tree[left];
+            switch(self->func) {
+                case Sum:
+                    res += self->tree[left];
+                    break;
+                case Min:
+                    res = MIN(self->tree[left], res);
+                    break;
+                case Max:
+                    res = MAX(self->tree[left], res);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return NULL;
+            }
+
             left++;
         }
 
         if (right & 1) {
             --right;
-            res += self->tree[right];
+
+            switch(self->func) {
+                case Sum:
+                    res += self->tree[right];
+                    break;
+                case Min:
+                    res = MIN(res, self->tree[right]);
+                    break;
+                case Max:
+                    res = MAX(res, self->tree[right]);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return NULL;
+            }
         }
 
         left >>= 1;
@@ -132,7 +203,20 @@ floatsegmenttree_update(FloatSegmentTreeObject *self, PyObject *args, PyObject *
         left_child = self->tree[parent << 1];
         right_child = self->tree[parent << 1 | 1];
 
-        self->tree[parent] = left_child + right_child;
+        switch(self->func) {
+            case Sum:
+                self->tree[parent] = left_child + right_child;
+                break;
+            case Min:
+                self->tree[parent] = MIN(left_child, right_child);
+                break;
+            case Max:
+                self->tree[parent] = MAX(left_child, right_child);
+                break;
+            default:
+                Py_UNREACHABLE();
+                return NULL;
+        }
         parent >>= 1;
     }
 

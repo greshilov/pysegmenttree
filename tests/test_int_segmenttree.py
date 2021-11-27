@@ -1,5 +1,6 @@
 import pytest
 
+from pysegmenttree import QueryFunction
 from pysegmenttree.c_extensions import IntSegmentTree
 from pysegmenttree.test_utils import VerifySegmentTree
 

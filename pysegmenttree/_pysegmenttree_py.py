@@ -1,14 +1,21 @@
 import operator
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Union
 
-from ._abc import AbstractSegmentTree, Func, T
+from ._abc import AbstractSegmentTree, Func, QueryFunction, T
 
 
 class PySegmentTree(AbstractSegmentTree):
     """Pure python segment tree implementation."""
 
-    def __init__(self, source: List[T], func: Optional[Func] = None):
-        self.func = func if func is not None else operator.add
+    def __init__(
+        self,
+        source: List[T],
+        func: Optional[Union[Func, QueryFunction]] = QueryFunction.SUM,
+    ):
+        if isinstance(func, QueryFunction):
+            self.func = func.to_python_func()
+        else:
+            self.func = func
         self._size = len(source)
         self._tree = [*[None] * self._size, *source]
         self._build()

@@ -1,6 +1,6 @@
-from typing import Callable, List, Optional
+from typing import List, Optional, Union
 
-from ._abc import AbstractSegmentTree, T
+from ._abc import AbstractSegmentTree, Func, QueryFunction, T
 from ._pysegmenttree_py import PySegmentTree
 
 try:
@@ -12,18 +12,18 @@ except ImportError:
 
 
 def stree(
-    source: List[T], func: Optional[Callable[[T, T], T]] = None
+    source: List[T], func: Union[Func, QueryFunction] = QueryFunction.SUM
 ) -> AbstractSegmentTree:
     """
     Automatically detects the type of input container, and uses the
     fastest possible segment tree implementation.
     """
     try:
-        if C_EXTENSIONS:
-            if source and isinstance(source[0], int) and func is None:
-                return IntSegmentTree(source)
-            if source and isinstance(source[0], float) and func is None:
-                return FloatSegmentTree(source)
+        if C_EXTENSIONS and isinstance(func, QueryFunction):
+            if source and isinstance(source[0], int):
+                return IntSegmentTree(source, func=func.value)
+            if source and isinstance(source[0], float):
+                return FloatSegmentTree(source, func=func.value)
     except OverflowError:
         pass
 
