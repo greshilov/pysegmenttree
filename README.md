@@ -40,6 +40,36 @@ $ pip install pysegmenttree
 16
 ```
 
+# Advanced usage
+There are three predefined query functions available, that can be used with `int` or `float` trees. Use them as follows:
+```
+>> from pysegmenttree import stree, QueryFunction
+>> tree = stree([5, 1, 9, 4, 5, 11], func=QueryFunction.MIN)
+
+# Find min on the interval [1, 4)
+>> tree.query(1, 4)
+1
+```
+
+Plain python functions are also suitable, but in this case c-extensions will **not** be used.
+```
+>> tree = stree([5, 1, 9, 4, 5, 11], func=min)
+>> tree.query(1, 4)
+1
+```
+
+Example with user-defined class.
+```
+>> from pysegmenttree import stree
+>> from pysegmenttree.test_utils import Vec2D
+# List of 2D vectors
+>> tree = stree([Vec2D(0, 1), Vec2D(5, -2), Vec2D(-2, 3)], func=max)
+# Find the vector of maximum length on the interval [0, 2)
+>> tree.query(0, 2)
+
+Vec2D(x=5, y=-2)
+```
+
 # Docs
 Docs are available [here](https://pysegmenttree.readthedocs.io/en/latest/).
 

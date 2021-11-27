@@ -2,7 +2,9 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <stdbool.h>
+#include <string.h>
 #include "structmember.h"
+#include "common.h"
 
 #if defined(_WIN32)
     #define __builtin_saddll_overflow saddll_overflow
@@ -37,6 +39,7 @@ typedef struct {
     PyObject_HEAD
     Py_ssize_t size;
     long long *tree;
+    enum QueryFunc func;
 } IntSegmentTreeObject;
 
 static void
@@ -70,6 +73,21 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
                                      &source, &func))
         return -1;
 
+    if (func != NULL) {
+        if (strcmp(func, "sum") == 0) {
+            self->func = Sum;
+        } else if (strcmp(func, "min") == 0) {
+            self->func = Min;
+        } else if (strcmp(func, "max") == 0) {
+            self->func = Max;
+        } else {
+            PyErr_SetString(PyExc_ValueError, "Invalid 'func' argument, must be 'sum', 'min' or 'max'");
+            return -1;
+        }
+    } else {
+        self->func = Sum;
+    }
+
     if (source) {
         Py_ssize_t size = PyList_Size(source);
         self->size = size;
@@ -94,9 +112,23 @@ intsegmenttree_init(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
             long long right = self->tree[i << 1 | 1];
 
             long long res;
-            if (__builtin_saddll_overflow(left, right, &res)) {
-                PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
-                return -1;
+
+            switch(self->func) {
+                case Sum:
+                    if (__builtin_saddll_overflow(left, right, &res)) {
+                        PyErr_SetString(PyExc_OverflowError, "Overflow while building the tree");
+                        return -1;
+                    }
+                    break;
+                case Min:
+                    res = MIN(left, right);
+                    break;
+                case Max:
+                    res = MAX(left, right);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return -1;
             }
             self->tree[i] = res;
         }
@@ -124,19 +156,60 @@ intsegmenttree_query(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds)
         Py_RETURN_NONE;
     }
 
-    long long res = 0;
     left += self->size;
     right += self->size;
+    long long res;
+
+    switch(self->func) {
+        case Sum:
+            res = 0;
+            break;
+        case Min:
+        case Max:
+            res = self->tree[left];
+            break;
+        default:
+            Py_UNREACHABLE();
+            return NULL;
+    }
 
     while (left < right) {
         if (left & 1) {
-            res += self->tree[left];
+            switch(self->func) {
+                case Sum:
+                    res += self->tree[left];
+                    break;
+                case Min:
+                    res = MIN(self->tree[left], res);
+                    break;
+                case Max:
+                    res = MAX(self->tree[left], res);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return NULL;
+            }
+
             left++;
         }
 
         if (right & 1) {
             --right;
-            res += self->tree[right];
+
+            switch(self->func) {
+                case Sum:
+                    res += self->tree[right];
+                    break;
+                case Min:
+                    res = MIN(res, self->tree[right]);
+                    break;
+                case Max:
+                    res = MAX(res, self->tree[right]);
+                    break;
+                default:
+                    Py_UNREACHABLE();
+                    return NULL;
+            }
         }
 
         left >>= 1;
@@ -175,9 +248,22 @@ intsegmenttree_update(IntSegmentTreeObject *self, PyObject *args, PyObject *kwds
         left_child = self->tree[parent << 1];
         right_child = self->tree[parent << 1 | 1];
 
-        if (__builtin_saddll_overflow(left_child, right_child, &self->tree[parent])) {
-            PyErr_SetString(PyExc_OverflowError, "Overflow while updating the tree");
-            return NULL;
+        switch(self->func) {
+            case Sum:
+                if (__builtin_saddll_overflow(left_child, right_child, &self->tree[parent])) {
+                    PyErr_SetString(PyExc_OverflowError, "Overflow while updating the tree");
+                    return NULL;
+                };
+                break;
+            case Min:
+                self->tree[parent] = MIN(left_child, right_child);
+                break;
+            case Max:
+                self->tree[parent] = MAX(left_child, right_child);
+                break;
+            default:
+                Py_UNREACHABLE();
+                return NULL;
         }
 
         parent >>= 1;
