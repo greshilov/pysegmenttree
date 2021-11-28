@@ -12,7 +12,7 @@ class QueryFunction(Enum):
     MIN = "min"
     MAX = "max"
 
-    @lru_cache
+    @lru_cache()
     def _map(self, value: "QueryFunction"):
         return {
             QueryFunction.SUM: add,
